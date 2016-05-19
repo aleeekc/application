@@ -1,0 +1,41 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.json.simple.JSONArray;
+
+
+-----------------------------------------------------------------
+
+
+
+// System.out.println(response_string);
+		JSONParser parser = new JSONParser();
+		try {
+
+			JSONObject jsonObject = (JSONObject) parser.parse(response_string);
+			JSONArray items = (JSONArray) jsonObject.get("items");
+			Iterator i = items.iterator();
+
+			while (i.hasNext()) {
+				JSONObject innerObj = (JSONObject) i.next();
+				// System.out.println(innerObj.get("fileid"));
+				idList.add(innerObj.get("fileid").toString());
+				nameList.add(innerObj.get("name").toString());
+				createdList.add(innerObj.get("created").toString());
+			}
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
