@@ -10,6 +10,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -253,6 +256,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         private final String mEmail;
         private final String mPassword;
+        Bundle bundle = new Bundle();
         ArrayList<Categories> categoriesArrayList = new ArrayList<>();
         ArrayList<Subcategories> subcategoriesArrayList = new ArrayList<>();
         ArrayList<Subsubcategories> subsubcategoriesArrayList = new ArrayList<>();
@@ -277,6 +281,32 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     subcategoriesArrayList = jsonParserObj.getSubCategories();
                     subsubcategoriesArrayList = jsonParserObj.getSubSubCategories();
 
+                    DBHelper dbHelper = new DBHelper(getApplicationContext());
+
+                    Iterator it = categoriesArrayList.iterator();
+                    while (it.hasNext()){
+                        Categories categories = (Categories) it.next();
+                        dbHelper.insertCategory(categories.getCategory_id(),categories.getCategory_name());
+                    }
+
+                    it = subsubcategoriesArrayList.iterator();
+                    while (it.hasNext()){
+                        Subsubcategories subsubcategories = (Subsubcategories) it.next();
+                        dbHelper.insertSubSubCategory(subsubcategories.getSub_subcategory_name(),subsubcategories.getSubcategory_id(),subsubcategories.getSub_subcategory_id());
+                    }
+
+                    it = subcategoriesArrayList.iterator();
+                    while (it.hasNext()){
+                        Subcategories subcategories = (Subcategories) it.next();
+                        dbHelper.insertSubCategory(subcategories.getCategory_id(),subcategories.getSubcategory_id(),subcategories.getSubcategory_name(),subcategories.getCover());
+                    }
+
+
+                    bundle.putSerializable("categories", new DataHelper(categoriesArrayList));
+                    bundle.putSerializable("subcategories", new DataHelper(subcategoriesArrayList));
+                    bundle.putSerializable("subsubcategories", new DataHelper(subsubcategoriesArrayList));
+
+
                 }
 
             } catch (Exception e) {
@@ -293,16 +323,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+                Log.v("Async","The request was received and parsed !");
 
                 Intent intent = new Intent(getApplicationContext(), ListViewActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("categories", new DataHelper(categoriesArrayList));
-                bundle.putSerializable("subcategories", new DataHelper(subcategoriesArrayList));
-                bundle.putSerializable("subsubcategories", new DataHelper(subsubcategoriesArrayList));
                 intent.putExtra("bundle", bundle);
                 startActivity(intent);
-                //finish();
 
             } else {
                 Toast.makeText(getApplicationContext(), "Wrong credentials!!!", Toast.LENGTH_SHORT).show();

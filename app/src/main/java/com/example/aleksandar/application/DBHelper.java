@@ -26,9 +26,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "CREATE TABLE category" +
-                        "(primaryid INTEGER PRIMARY KEY, category_name text, category_id text)");
-        db.execSQL("CREATE TABLE subcategory" + "(primaryid TEXT PRIMARY KEY, category_id text, subcategory_id text, subcategory_name text, cover text)");
-        db.execSQL("CREATE TABLE subsubcategory" + "(primaryid TEXT PRIMARY KEY, sub_subcategory_name text, subcategory_id text, sub_subcategory_id text)");
+                        "(primaryid INTEGER PRIMARY KEY AUTOINCREMENT, category_name text, category_id text)");
+        db.execSQL("CREATE TABLE subcategory" + "(primaryid INTEGER PRIMARY KEY AUTOINCREMENT, category_id text, subcategory_id text, subcategory_name text, cover text)");
+        db.execSQL("CREATE TABLE subsubcategory" + "(primaryid INTEGER PRIMARY KEY AUTOINCREMENT, sub_subcategory_name text, subcategory_id text, sub_subcategory_id text)");
 
     }
 
@@ -51,14 +51,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean insertCategory(String category_id,String subcategory_id, String subcategory_name, String cover) {
+    public boolean insertCategory(String category_id,String category_name) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.v("TAG", "database can be accessed to write");
         ContentValues contentValues = new ContentValues();
-        contentValues.put("subcategory_id", subcategory_id.toString());
+        contentValues.put("category_name", category_name.toString());
         contentValues.put("category_id", category_id.toString());
-        contentValues.put("subcategory_name", subcategory_name.toString());
-        contentValues.put("cover", cover.toString());
         db.insert("subcategory", null, contentValues);
         db.close();
         return true;

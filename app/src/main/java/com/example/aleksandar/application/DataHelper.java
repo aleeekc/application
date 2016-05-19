@@ -1,5 +1,8 @@
 package com.example.aleksandar.application;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,4 +20,5 @@ public class DataHelper implements Serializable {
     public ArrayList<?> getList() {
         return this.data;
     }
+
 }

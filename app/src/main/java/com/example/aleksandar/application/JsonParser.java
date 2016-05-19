@@ -71,7 +71,7 @@ public class JsonParser {
                 JSONArray subSubCategories = (JSONArray) jsonObject.get("subcategories");
 
                 // CHECK FOR EMPTY JSON OBJECT
-                if(subSubCategories.isEmpty()){
+                if (subSubCategories.isEmpty()) {
                     subsubcategoriesArrayList.add(null);
                 }
 
@@ -83,14 +83,29 @@ public class JsonParser {
                     Subsubcategories subsubcategoriesObj = new Subsubcategories();
 
                     // RECHECK REQUEST
-                    subsubcategoriesObj.setSub_subcategory_id(innerObjSub.get("sub_subcategory_id").toString());
-                    Log.v("subcategory", "Sub_Subcategory_id: " + innerObjSub.get("sub_subcategory_id").toString());
+                    try {
+                        subsubcategoriesObj.setSub_subcategory_id(innerObjSub.get("sub_subcategory_id").toString());
+                        Log.v("subcategory", "Sub_Subcategory_id: " + innerObjSub.get("sub_subcategory_id").toString());
+                    } catch (Exception e) {
+                        Log.v("Parser", "sub_subcategory_id does not exist!");
+                        subsubcategoriesObj.setSub_subcategory_id("");
+                    }
 
-                    subsubcategoriesObj.setSub_subcategory_id(innerObjSub.get("subcategory_id").toString());
-                    Log.v("subcategory", "subcategory_id: " + innerObjSub.get("subcategory_id").toString());
+                    try {
+                        subsubcategoriesObj.setSub_subcategory_id(innerObjSub.get("subcategory_id").toString());
+                        Log.v("subcategory", "subcategory_id: " + innerObjSub.get("subcategory_id").toString());
+                    } catch (Exception e) {
+                        Log.v("Parser", "subcategory_id does not exist!");
+                        subsubcategoriesObj.setSub_subcategory_id("");
+                    }
 
-                    subsubcategoriesObj.setSub_subcategory_name(innerObjSub.get("sub_subcategory_name").toString());
-                    Log.v("subcategory", "sub_subcategory_name: " + innerObjSub.get("sub_subcategory_name").toString());
+                    try {
+                        subsubcategoriesObj.setSub_subcategory_name(innerObjSub.get("sub_subcategory_name").toString());
+                        Log.v("subcategory", "sub_subcategory_name: " + innerObjSub.get("sub_subcategory_name").toString());
+                    } catch (Exception e) {
+                        Log.v("Parser", "sub_subcategory_name does not exist!");
+                        subsubcategoriesObj.setSub_subcategory_name("");
+                    }
 
                     subsubcategoriesArrayList.add(subsubcategoriesObj);
 
@@ -98,20 +113,25 @@ public class JsonParser {
                 subcategoriesArrayList.add(subcategoriesObj);
             }
 
-        } catch (ParseException e) {
+        } catch (
+                ParseException e
+                )
+
+        {
             e.printStackTrace();
         }
+
     }
 
-    public ArrayList<Categories> getCategories(){
+    public ArrayList<Categories> getCategories() {
         return categoriesArrayList;
     }
 
-    public ArrayList<Subcategories> getSubCategories(){
+    public ArrayList<Subcategories> getSubCategories() {
         return subcategoriesArrayList;
     }
 
-    public ArrayList<Subsubcategories> getSubSubCategories(){
+    public ArrayList<Subsubcategories> getSubSubCategories() {
         return subsubcategoriesArrayList;
     }
 }
